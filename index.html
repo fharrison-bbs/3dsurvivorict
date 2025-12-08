@@ -1763,22 +1763,27 @@
             if (keys['d']) moveDir.x += 1;
             
             if (moveDir.length() > 0) {
-                moveDir.normalize();
+                const inputX = moveDir.x;
+                const inputZ = moveDir.z;
                 // Apply only horizontal rotation (yaw) from camera quaternion
                 const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
                 const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
                 // Project to horizontal plane
                 forward.y = 0;
                 right.y = 0;
-                forward.normalize();
-                right.normalize();
-                // Calculate movement direction
-                const movement = new THREE.Vector3();
-                movement.addScaledVector(forward, -moveDir.z);
-                movement.addScaledVector(right, moveDir.x);
-                camera.position.addScaledVector(movement, moveSpeed);
-                camera.position.x = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.x));
-                camera.position.z = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.z));
+                // Normalize if not zero (handles edge case of looking straight up/down)
+                if (forward.lengthSq() > 0.0001) forward.normalize();
+                if (right.lengthSq() > 0.0001) right.normalize();
+                // Calculate movement direction (reuse moveDir to avoid allocation)
+                moveDir.set(0, 0, 0);
+                moveDir.addScaledVector(forward, -inputZ);
+                moveDir.addScaledVector(right, inputX);
+                if (moveDir.lengthSq() > 0) {
+                    moveDir.normalize();
+                    camera.position.addScaledVector(moveDir, moveSpeed);
+                    camera.position.x = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.x));
+                    camera.position.z = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.z));
+                }
             }
 
             // Auto fire
