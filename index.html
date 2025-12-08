@@ -21,6 +21,9 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #000;
             color: #fff;
+        }
+        
+        body.pointer-locked {
             cursor: none;
         }
         
@@ -733,8 +736,9 @@
         });
 
         // ===== MOUSE STATE =====
-        let mouseX = 0, mouseY = 0;
         let mouseLocked = false;
+        const euler = new THREE.Euler(0, 0, 0, 'YXZ');
+        const PI_2 = Math.PI / 2;
         
         document.addEventListener('click', () => {
             if (!mouseLocked && !gameState.questionActive) {
@@ -747,12 +751,21 @@
         
         document.addEventListener('pointerlockchange', () => {
             mouseLocked = document.pointerLockElement === renderer.domElement;
+            if (mouseLocked) {
+                document.body.classList.add('pointer-locked');
+            } else {
+                document.body.classList.remove('pointer-locked');
+            }
         });
         
         document.addEventListener('mousemove', (e) => {
             if (mouseLocked) {
-                mouseX += e.movementX;
-                mouseY += e.movementY;
+                const sensitivity = 0.002;
+                euler.setFromQuaternion(camera.quaternion);
+                euler.y -= e.movementX * sensitivity;
+                euler.x -= e.movementY * sensitivity;
+                euler.x = Math.max(-PI_2, Math.min(PI_2, euler.x));
+                camera.quaternion.setFromEuler(euler);
             }
         });
 
@@ -1575,6 +1588,12 @@
         // ===== QUESTION SYSTEM =====
         function showQuestion(fromSafeRoom = false) {
             if (gameState.questionActive || gameState.gameOver) return;
+            
+            // Exit pointer lock to show cursor
+            if (document.pointerLockElement) {
+                document.exitPointerLock();
+            }
+            
             gameState.questionActive = true;
             gameState.paused = true;
             gameState.pauseStartTime = Date.now();
@@ -1750,15 +1769,6 @@
                 camera.position.x = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.x));
                 camera.position.z = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.z));
             }
-
-            // Mouse look
-            const sensitivity = 0.002;
-            camera.rotation.order = 'YXZ';
-            camera.rotation.y -= mouseX * sensitivity;
-            camera.rotation.x -= mouseY * sensitivity;
-            camera.rotation.x = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, camera.rotation.x));
-            mouseX *= 0.7;
-            mouseY *= 0.7;
 
             // Auto fire
             if (keys[' '] && !gameState.questionActive) {
