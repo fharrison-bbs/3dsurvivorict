@@ -1955,20 +1955,32 @@
             
             requestAnimationFrame(animate);
 
-            // Movement
+            // Movement - Standard FPS controls
             const moveSpeed = (gameState.titanMode ? 0.35 : 0.18) * gameState.speedMultiplier;
             const moveDir = new THREE.Vector3();
             
-            // WASD and Arrow Keys
-            if (keys['w'] || keys['ArrowUp']) moveDir.z -= 1;
-            if (keys['s'] || keys['ArrowDown']) moveDir.z += 1;
-            if (keys['a'] || keys['ArrowLeft']) moveDir.x -= 1;
-            if (keys['d'] || keys['ArrowRight']) moveDir.x += 1;
+            // WASD and Arrow Keys - Standard FPS layout
+            if (keys['w'] || keys['ArrowUp']) moveDir.z -= 1;      // Forward
+            if (keys['s'] || keys['ArrowDown']) moveDir.z += 1;    // Backward
+            if (keys['a'] || keys['ArrowLeft']) moveDir.x -= 1;    // Strafe Left
+            if (keys['d'] || keys['ArrowRight']) moveDir.x += 1;   // Strafe Right
             
             if (moveDir.length() > 0) {
                 moveDir.normalize();
-                moveDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), camera.rotation.y);
-                camera.position.addScaledVector(moveDir, moveSpeed);
+                // Apply camera rotation to movement direction for proper FPS controls
+                const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+                forward.y = 0;
+                forward.normalize();
+                
+                const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+                right.y = 0;
+                right.normalize();
+                
+                const actualMove = new THREE.Vector3();
+                actualMove.addScaledVector(forward, -moveDir.z); // Note: -z because forward is in -z direction
+                actualMove.addScaledVector(right, moveDir.x);
+                
+                camera.position.addScaledVector(actualMove, moveSpeed);
                 camera.position.x = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.x));
                 camera.position.z = Math.max(-ARENA_SIZE + 2, Math.min(ARENA_SIZE - 2, camera.position.z));
             }
