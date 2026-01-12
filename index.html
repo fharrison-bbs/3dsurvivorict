@@ -249,21 +249,26 @@
             position: absolute;
             top: 120px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 8px;
-            border-radius: 10px;
-            max-width: 150px;
-            font-size: 9px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px;
+            border-radius: 12px;
+            max-width: 220px;
+            max-height: 70vh;
+            overflow-y: auto;
+            font-size: 10px;
             z-index: 5;
-            border: 1px solid rgba(255, 200, 0, 0.4);
+            border: 2px solid rgba(255, 200, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 200, 0, 0.3);
             pointer-events: none;
         }
-        
+
         .powerup-item {
-            padding: 4px 6px;
-            margin: 2px 0;
-            background: rgba(255, 200, 0, 0.15);
+            padding: 5px 8px;
+            margin: 3px 0;
+            background: rgba(255, 200, 0, 0.2);
             border-left: 3px solid #fd0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
             border-radius: 4px;
             color: #fd0;
         }
@@ -728,6 +733,63 @@
             explosiveRoundsActive: false,
             healthRegenActive: false,
             swordAuraActive: false,
+
+            // New movement & mobility powerups
+            dashCount: 0,
+            jumpMultiplier: 1,
+            airControlActive: false,
+            phaseWalkActive: false,
+
+            // New combat powerups
+            critChance: 0,
+            homingShotsActive: false,
+            chainLightningStacks: 0,
+            penetrationCount: 0,
+            ricochetCount: 0,
+            burnStacks: 0,
+            freezeShotActive: false,
+            poisonStacks: 0,
+
+            // New defense powerups
+            armorStacks: 0,
+            dodgeChance: 0,
+            lifeStealPercent: 0,
+            invincibleActive: false,
+            thornsStacks: 0,
+
+            // New resource & utility powerups
+            ammoRegenStacks: 0,
+            dropMultiplier: 1,
+            xpMultiplier: 1,
+            visionRange: 1,
+            coinMagnetActive: false,
+
+            // New special effects powerups
+            vortexActive: false,
+            staticFieldActive: false,
+            moonGravityActive: false,
+            orbitingOrbs: 0,
+            cloneCount: 0,
+            swarmCount: 0,
+            timeSlowFactor: 1,
+
+            // Size & scale
+            sizeMultiplier: 1,
+
+            // Synergy bonuses
+            hyperactiveBonus: false,
+            destructionBonus: false,
+            fortressBonus: false,
+            phantomBonus: false,
+            absorptionBonus: false,
+            berserkerBonus: false,
+            marksmanBonus: false,
+            thermalShockBonus: false,
+            bulletHellBonus: false,
+            ironcladBonus: false,
+            armyBonus: false,
+            stormLordBonus: false,
+
             bossesSpawned: []
         };
 
@@ -1516,13 +1578,31 @@
                 activateOrbitalStrike();
             }},
             
-            // Enhanced Offense
-            { name: "⚡ Speed x2", color: 0x00ffff, rarity: 0.7, duration: 12000, effect: () => {
-                gameState.speedMultiplier = 2; addTimedPowerup("⚡ Speed", 12000, () => { gameState.speedMultiplier = 1; }); }},
-            { name: "💥 Damage x2", color: 0xff8800, rarity: 0.7, duration: 15000, effect: () => {
-                gameState.damageMultiplier = 2; addTimedPowerup("💥 Damage", 15000, () => { gameState.damageMultiplier = 1; }); }},
-            { name: "🔥 Rapid Fire", color: 0xff4400, rarity: 0.6, duration: 10000, effect: () => {
-                gameState.fireRateMultiplier = 4; addTimedPowerup("🔥 Rapid", 10000, () => { gameState.fireRateMultiplier = 1; }); }},
+            // Enhanced Offense - NOW STACKABLE!
+            { name: "⚡ Speed Boost", color: 0x00ffff, rarity: 0.7, duration: 12000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "⚡ Speed")?.stacks || 0) + 1;
+                gameState.speedMultiplier = 1 + (stacks * 0.5); // Each stack adds 0.5x speed
+                addTimedPowerup("⚡ Speed", 12000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "⚡ Speed")?.stacks || 0;
+                    gameState.speedMultiplier = Math.max(1, 1 + (remaining * 0.5));
+                }, true);
+            }},
+            { name: "💥 Damage Boost", color: 0xff8800, rarity: 0.7, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "💥 Damage")?.stacks || 0) + 1;
+                gameState.damageMultiplier = 1 + (stacks * 0.5); // Each stack adds 0.5x damage
+                addTimedPowerup("💥 Damage", 15000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "💥 Damage")?.stacks || 0;
+                    gameState.damageMultiplier = Math.max(1, 1 + (remaining * 0.5));
+                }, true);
+            }},
+            { name: "🔥 Rapid Fire", color: 0xff4400, rarity: 0.6, duration: 10000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔥 Rapid")?.stacks || 0) + 1;
+                gameState.fireRateMultiplier = 1 + (stacks * 1.5); // Each stack adds 1.5x fire rate
+                addTimedPowerup("🔥 Rapid", 10000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🔥 Rapid")?.stacks || 0;
+                    gameState.fireRateMultiplier = Math.max(1, 1 + (remaining * 1.5));
+                }, true);
+            }},
             
             // Special
             { name: "🧲 Magnet", color: 0xffdd00, rarity: 0.5, duration: 15000, effect: () => {
@@ -1549,6 +1629,245 @@
             }},
             { name: "⚔️ Sword Aura", color: 0xffaa00, rarity: 0.25, duration: 10000, effect: () => {
                 gameState.swordAuraActive = true; addTimedPowerup("⚔️ Sword", 10000, () => { gameState.swordAuraActive = false; });
+            }},
+
+            // ===== MASSIVE NEW POWERUP EXPANSION =====
+
+            // Movement & Mobility
+            { name: "🌀 Dash", color: 0x00ddff, rarity: 0.5, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🌀 Dash")?.stacks || 0) + 1;
+                gameState.dashCount = stacks;
+                addTimedPowerup("🌀 Dash", 15000, () => {
+                    gameState.dashCount = Math.max(0, (gameState.activePowerups.find(p => p.name === "🌀 Dash")?.stacks || 0));
+                }, true);
+            }},
+            { name: "🦘 Jump Boost", color: 0xff99ff, rarity: 0.4, duration: 12000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🦘 Jump")?.stacks || 0) + 1;
+                gameState.jumpMultiplier = 1 + (stacks * 0.4);
+                addTimedPowerup("🦘 Jump", 12000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🦘 Jump")?.stacks || 0;
+                    gameState.jumpMultiplier = Math.max(1, 1 + (remaining * 0.4));
+                }, true);
+            }},
+            { name: "💨 Air Control", color: 0xbbffbb, rarity: 0.35, duration: 18000, effect: () => {
+                gameState.airControlActive = true; addTimedPowerup("💨 Air", 18000, () => { gameState.airControlActive = false; });
+            }},
+            { name: "🌊 Phase Walk", color: 0x5599ff, rarity: 0.25, duration: 10000, effect: () => {
+                gameState.phaseWalkActive = true; addTimedPowerup("🌊 Phase", 10000, () => { gameState.phaseWalkActive = false; });
+            }},
+
+            // Combat Enhancements
+            { name: "🎯 Precision", color: 0xffaa88, rarity: 0.4, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🎯 Precision")?.stacks || 0) + 1;
+                gameState.critChance = Math.min(0.8, 0.1 + (stacks * 0.15)); // 15% crit per stack, max 80%
+                addTimedPowerup("🎯 Precision", 15000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🎯 Precision")?.stacks || 0;
+                    gameState.critChance = Math.max(0, 0.1 + (remaining * 0.15));
+                }, true);
+            }},
+            { name: "🔮 Homing Shots", color: 0xaa88ff, rarity: 0.3, duration: 12000, effect: () => {
+                gameState.homingShotsActive = true; addTimedPowerup("🔮 Homing", 12000, () => { gameState.homingShotsActive = false; });
+            }},
+            { name: "⚡ Chain Lightning", color: 0xffff00, rarity: 0.25, duration: 14000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "⚡ Chain")?.stacks || 0) + 1;
+                gameState.chainLightningStacks = stacks;
+                addTimedPowerup("⚡ Chain", 14000, () => {
+                    gameState.chainLightningStacks = gameState.activePowerups.find(p => p.name === "⚡ Chain")?.stacks || 0;
+                }, true);
+            }},
+            { name: "🔶 Penetration", color: 0xff8844, rarity: 0.45, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔶 Penetration")?.stacks || 0) + 1;
+                gameState.penetrationCount = stacks;
+                addTimedPowerup("🔶 Penetration", 15000, () => {
+                    gameState.penetrationCount = gameState.activePowerups.find(p => p.name === "🔶 Penetration")?.stacks || 0;
+                }, true);
+            }},
+            { name: "💫 Ricochet", color: 0x88ffff, rarity: 0.35, duration: 12000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "💫 Ricochet")?.stacks || 0) + 1;
+                gameState.ricochetCount = stacks;
+                addTimedPowerup("💫 Ricochet", 12000, () => {
+                    gameState.ricochetCount = gameState.activePowerups.find(p => p.name === "💫 Ricochet")?.stacks || 0;
+                }, true);
+            }},
+            { name: "🔥 Burn Effect", color: 0xff4422, rarity: 0.4, duration: 16000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔥 Burn")?.stacks || 0) + 1;
+                gameState.burnStacks = stacks;
+                addTimedPowerup("🔥 Burn", 16000, () => {
+                    gameState.burnStacks = gameState.activePowerups.find(p => p.name === "🔥 Burn")?.stacks || 0;
+                }, true);
+            }},
+            { name: "❄️ Freeze Shot", color: 0x88ddff, rarity: 0.35, duration: 14000, effect: () => {
+                gameState.freezeShotActive = true; addTimedPowerup("❄️ Freeze", 14000, () => { gameState.freezeShotActive = false; });
+            }},
+            { name: "☠️ Poison Rounds", color: 0x88ff44, rarity: 0.4, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "☠️ Poison")?.stacks || 0) + 1;
+                gameState.poisonStacks = stacks;
+                addTimedPowerup("☠️ Poison", 15000, () => {
+                    gameState.poisonStacks = gameState.activePowerups.find(p => p.name === "☠️ Poison")?.stacks || 0;
+                }, true);
+            }},
+
+            // Defense & Survival
+            { name: "💎 Armor Plating", color: 0x4488ff, rarity: 0.5, duration: 18000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "💎 Armor")?.stacks || 0) + 1;
+                gameState.armorStacks = stacks;
+                addTimedPowerup("💎 Armor", 18000, () => {
+                    gameState.armorStacks = gameState.activePowerups.find(p => p.name === "💎 Armor")?.stacks || 0;
+                }, true);
+            }},
+            { name: "🌟 Dodge", color: 0xffff88, rarity: 0.35, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🌟 Dodge")?.stacks || 0) + 1;
+                gameState.dodgeChance = Math.min(0.6, stacks * 0.15); // 15% dodge per stack, max 60%
+                addTimedPowerup("🌟 Dodge", 15000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🌟 Dodge")?.stacks || 0;
+                    gameState.dodgeChance = Math.max(0, remaining * 0.15);
+                }, true);
+            }},
+            { name: "💚 Life Steal", color: 0x44ff88, rarity: 0.4, duration: 18000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "💚 Lifesteal")?.stacks || 0) + 1;
+                gameState.lifeStealPercent = Math.min(0.5, stacks * 0.1); // 10% per stack, max 50%
+                addTimedPowerup("💚 Lifesteal", 18000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "💚 Lifesteal")?.stacks || 0;
+                    gameState.lifeStealPercent = Math.max(0, remaining * 0.1);
+                }, true);
+            }},
+            { name: "🌈 Invincibility", color: 0xffffff, rarity: 0.08, duration: 5000, effect: () => {
+                gameState.invincibleActive = true; addTimedPowerup("🌈 Invincible", 5000, () => { gameState.invincibleActive = false; });
+            }},
+            { name: "🔰 Thorns", color: 0xff8844, rarity: 0.35, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔰 Thorns")?.stacks || 0) + 1;
+                gameState.thornsStacks = stacks;
+                addTimedPowerup("🔰 Thorns", 15000, () => {
+                    gameState.thornsStacks = gameState.activePowerups.find(p => p.name === "🔰 Thorns")?.stacks || 0;
+                }, true);
+            }},
+
+            // Resource & Utility
+            { name: "🔋 Ammo Regen", color: 0xffaa00, rarity: 0.5, duration: 20000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔋 AmmoRegen")?.stacks || 0) + 1;
+                gameState.ammoRegenStacks = stacks;
+                addTimedPowerup("🔋 AmmoRegen", 20000, () => {
+                    gameState.ammoRegenStacks = gameState.activePowerups.find(p => p.name === "🔋 AmmoRegen")?.stacks || 0;
+                }, true);
+            }},
+            { name: "📦 Double Drops", color: 0xffdd44, rarity: 0.3, duration: 20000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "📦 Drops")?.stacks || 0) + 1;
+                gameState.dropMultiplier = 1 + stacks;
+                addTimedPowerup("📦 Drops", 20000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "📦 Drops")?.stacks || 0;
+                    gameState.dropMultiplier = Math.max(1, 1 + remaining);
+                }, true);
+            }},
+            { name: "⭐ XP Boost", color: 0xffff00, rarity: 0.45, duration: 25000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "⭐ XP")?.stacks || 0) + 1;
+                gameState.xpMultiplier = 1 + (stacks * 0.5);
+                addTimedPowerup("⭐ XP", 25000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "⭐ XP")?.stacks || 0;
+                    gameState.xpMultiplier = Math.max(1, 1 + (remaining * 0.5));
+                }, true);
+            }},
+            { name: "🔍 Vision", color: 0x88ffff, rarity: 0.4, duration: 20000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔍 Vision")?.stacks || 0) + 1;
+                gameState.visionRange = 1 + (stacks * 0.3);
+                addTimedPowerup("🔍 Vision", 20000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🔍 Vision")?.stacks || 0;
+                    gameState.visionRange = Math.max(1, 1 + (remaining * 0.3));
+                }, true);
+            }},
+            { name: "💰 Coin Magnet", color: 0xffdd00, rarity: 0.45, duration: 18000, effect: () => {
+                gameState.coinMagnetActive = true; addTimedPowerup("💰 Coins", 18000, () => { gameState.coinMagnetActive = false; });
+            }},
+
+            // Special Effects & Ultimate
+            { name: "🌪️ Vortex", color: 0x88ffaa, rarity: 0.2, duration: 12000, effect: () => {
+                gameState.vortexActive = true; addTimedPowerup("🌪️ Vortex", 12000, () => { gameState.vortexActive = false; });
+            }},
+            { name: "⚡ Static Field", color: 0x88aaff, rarity: 0.25, duration: 15000, effect: () => {
+                gameState.staticFieldActive = true; addTimedPowerup("⚡ Static", 15000, () => { gameState.staticFieldActive = false; });
+            }},
+            { name: "🌙 Moon Gravity", color: 0xaaaaff, rarity: 0.3, duration: 15000, effect: () => {
+                gameState.moonGravityActive = true; addTimedPowerup("🌙 Gravity", 15000, () => { gameState.moonGravityActive = false; });
+            }},
+            { name: "🔮 Orb Shield", color: 0xff88ff, rarity: 0.25, duration: 18000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔮 Orbs")?.stacks || 0) + 1;
+                gameState.orbitingOrbs = stacks;
+                addTimedPowerup("🔮 Orbs", 18000, () => {
+                    gameState.orbitingOrbs = gameState.activePowerups.find(p => p.name === "🔮 Orbs")?.stacks || 0;
+                }, true);
+            }},
+            { name: "🎭 Clone", color: 0xffaaff, rarity: 0.15, duration: 20000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🎭 Clone")?.stacks || 0) + 1;
+                gameState.cloneCount = stacks;
+                addTimedPowerup("🎭 Clone", 20000, () => {
+                    gameState.cloneCount = gameState.activePowerups.find(p => p.name === "🎭 Clone")?.stacks || 0;
+                }, true);
+            }},
+            { name: "🐝 Swarm", color: 0xffff44, rarity: 0.2, duration: 16000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🐝 Swarm")?.stacks || 0) + 1;
+                gameState.swarmCount = stacks * 3; // 3 bees per stack
+                addTimedPowerup("🐝 Swarm", 16000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🐝 Swarm")?.stacks || 0;
+                    gameState.swarmCount = remaining * 3;
+                }, true);
+            }},
+            { name: "🌀 Time Slow", color: 0xaaffff, rarity: 0.18, duration: 10000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🌀 TimeSlow")?.stacks || 0) + 1;
+                gameState.timeSlowFactor = Math.max(0.3, 1 - (stacks * 0.2)); // Each stack slows by 20%
+                addTimedPowerup("🌀 TimeSlow", 10000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🌀 TimeSlow")?.stacks || 0;
+                    gameState.timeSlowFactor = remaining > 0 ? Math.max(0.3, 1 - (remaining * 0.2)) : 1;
+                }, true);
+            }},
+
+            // Chaos & Random
+            { name: "🎲 Chaos", color: 0xff00ff, rarity: 0.25, effect: () => {
+                // Random powerful effect
+                const effects = [
+                    () => { gameState.health = gameState.maxHealth; },
+                    () => { gameState.ammo = gameState.maxAmmo; },
+                    () => { gameState.speedMultiplier *= 2; setTimeout(() => gameState.speedMultiplier /= 2, 8000); },
+                    () => { gameState.damageMultiplier *= 3; setTimeout(() => gameState.damageMultiplier /= 3, 6000); },
+                    () => { enemies.forEach(e => e.health *= 0.5); },
+                    () => { gameState.invincibleActive = true; addTimedPowerup("🎲 Chaos Inv", 5000, () => { gameState.invincibleActive = false; }); }
+                ];
+                effects[Math.floor(Math.random() * effects.length)]();
+            }},
+            { name: "🎰 Jackpot", color: 0xffaa00, rarity: 0.1, effect: () => {
+                // Spawn multiple random powerups
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const offset = new THREE.Vector3((Math.random()-0.5)*10, 0, (Math.random()-0.5)*10);
+                        spawnPowerup(camera.position.clone().add(offset));
+                    }, i * 300);
+                }
+            }},
+            { name: "💀 Curse of Power", color: 0x880088, rarity: 0.15, duration: 15000, effect: () => {
+                // High risk, high reward
+                gameState.damageMultiplier *= 3;
+                gameState.maxHealth *= 0.5;
+                gameState.health = Math.min(gameState.health, gameState.maxHealth);
+                addTimedPowerup("💀 Curse", 15000, () => {
+                    gameState.damageMultiplier /= 3;
+                    gameState.maxHealth *= 2;
+                });
+            }},
+
+            // Size & Scale
+            { name: "🔺 Size Up", color: 0xff88ff, rarity: 0.35, duration: 15000, stackable: true, effect: () => {
+                const stacks = (gameState.activePowerups.find(p => p.name === "🔺 Size")?.stacks || 0) + 1;
+                gameState.sizeMultiplier = 1 + (stacks * 0.3);
+                addTimedPowerup("🔺 Size", 15000, () => {
+                    const remaining = gameState.activePowerups.find(p => p.name === "🔺 Size")?.stacks || 0;
+                    gameState.sizeMultiplier = Math.max(1, 1 + (remaining * 0.3));
+                }, true);
+            }},
+            { name: "🔻 Mini Mode", color: 0x88ff88, rarity: 0.3, duration: 12000, effect: () => {
+                gameState.sizeMultiplier = 0.5;
+                gameState.dodgeChance = (gameState.dodgeChance || 0) + 0.3; // +30% dodge when small
+                addTimedPowerup("🔻 Mini", 12000, () => {
+                    gameState.sizeMultiplier = 1;
+                    gameState.dodgeChance = Math.max(0, (gameState.dodgeChance || 0) - 0.3);
+                });
             }}
         ];
         
@@ -1647,9 +1966,193 @@
             }, 500);
         }
 
-        function addTimedPowerup(name, duration, onEnd) {
-            gameState.activePowerups = gameState.activePowerups.filter(p => p.name !== name);
-            gameState.activePowerups.push({ name, endTime: Date.now() + duration, onEnd });
+        // Powerup synergies - when certain combinations are active
+        const POWERUP_SYNERGIES = [
+            {
+                combo: ["⚡ Speed", "🔥 Rapid"],
+                name: "💫 HYPERACTIVE",
+                effect: () => {
+                    gameState.hyperactiveBonus = true;
+                    // Extra movement speed and fire rate
+                    gameState.speedMultiplier *= 1.3;
+                    gameState.fireRateMultiplier *= 1.3;
+                }
+            },
+            {
+                combo: ["💥 Damage", "🔥 Rapid"],
+                name: "🔴 DESTRUCTION",
+                effect: () => {
+                    gameState.destructionBonus = true;
+                    // Extra damage when both active
+                    gameState.damageMultiplier *= 1.5;
+                }
+            },
+            {
+                combo: ["🛡️ Shield", "💚 Regen"],
+                name: "🏰 FORTRESS",
+                effect: () => {
+                    gameState.fortressBonus = true;
+                    // Increased max health
+                    gameState.maxHealth *= 1.5;
+                }
+            },
+            {
+                combo: ["⚡ Speed", "👻 GHOST"],
+                name: "👤 PHANTOM",
+                effect: () => {
+                    gameState.phantomBonus = true;
+                    // Even more evasive
+                    gameState.dodgeChance = Math.min(0.9, (gameState.dodgeChance || 0) + 0.3);
+                }
+            },
+            {
+                combo: ["🧲 Magnet", "🧛 Vampire"],
+                name: "🌀 ABSORPTION",
+                effect: () => {
+                    gameState.absorptionBonus = true;
+                    // Increased lifesteal
+                    gameState.lifeStealPercent = Math.min(0.8, (gameState.lifeStealPercent || 0) + 0.2);
+                }
+            },
+            {
+                combo: ["💥 Damage", "⚔️ Sword"],
+                name: "⚔️ BERSERKER",
+                effect: () => {
+                    gameState.berserkerBonus = true;
+                    // Massively increased melee damage
+                    gameState.damageMultiplier *= 1.8;
+                }
+            },
+            {
+                combo: ["🎯 AIM", "🔱 Triple"],
+                name: "🌟 MARKSMAN",
+                effect: () => {
+                    gameState.marksmanBonus = true;
+                    // Increased crit chance
+                    gameState.critChance = Math.min(0.95, (gameState.critChance || 0) + 0.25);
+                }
+            },
+            {
+                combo: ["🔥 Burn", "❄️ Freeze"],
+                name: "🌊 THERMAL SHOCK",
+                effect: () => {
+                    gameState.thermalShockBonus = true;
+                    // Both elements deal massive damage
+                }
+            },
+            {
+                combo: ["🔶 Penetration", "💫 Ricochet"],
+                name: "🎯 BULLET HELL",
+                effect: () => {
+                    gameState.bulletHellBonus = true;
+                    // Bullets bounce AND penetrate
+                }
+            },
+            {
+                combo: ["💎 Armor", "🔰 Thorns"],
+                name: "🛡️ IRONCLAD",
+                effect: () => {
+                    gameState.ironcladBonus = true;
+                    // Double armor and thorns damage
+                    gameState.armorStacks *= 2;
+                    gameState.thornsStacks *= 2;
+                }
+            },
+            {
+                combo: ["🎭 Clone", "🐝 Swarm"],
+                name: "👥 ARMY",
+                effect: () => {
+                    gameState.armyBonus = true;
+                    // Extra clones and swarm units
+                    gameState.cloneCount = Math.floor(gameState.cloneCount * 1.5);
+                    gameState.swarmCount = Math.floor(gameState.swarmCount * 1.5);
+                }
+            },
+            {
+                combo: ["⚡ Chain", "⚡ Static"],
+                name: "⚡ STORM LORD",
+                effect: () => {
+                    gameState.stormLordBonus = true;
+                    // Massive electric synergy
+                    gameState.chainLightningStacks *= 2;
+                }
+            }
+        ];
+
+        function checkPowerupSynergies() {
+            const activeNames = gameState.activePowerups.map(p => p.name);
+            const previousSynergies = gameState.activePowerups.filter(p => p.isSynergy).map(p => p.name);
+
+            // Reset all synergy bonuses
+            gameState.hyperactiveBonus = false;
+            gameState.destructionBonus = false;
+            gameState.fortressBonus = false;
+            gameState.phantomBonus = false;
+            gameState.absorptionBonus = false;
+            gameState.berserkerBonus = false;
+            gameState.marksmanBonus = false;
+            gameState.thermalShockBonus = false;
+            gameState.bulletHellBonus = false;
+            gameState.ironcladBonus = false;
+            gameState.armyBonus = false;
+            gameState.stormLordBonus = false;
+
+            // Clear existing synergies
+            gameState.activePowerups = gameState.activePowerups.filter(p => !p.isSynergy);
+
+            // Check each synergy
+            POWERUP_SYNERGIES.forEach(synergy => {
+                if (synergy.combo.every(name => activeNames.includes(name))) {
+                    // Activate synergy
+                    synergy.effect();
+
+                    // Add synergy to active powerups list for display
+                    if (!gameState.activePowerups.find(p => p.name === synergy.name)) {
+                        gameState.activePowerups.push({
+                            name: synergy.name,
+                            endTime: Infinity,
+                            isSynergy: true,
+                            stacks: 1
+                        });
+
+                        // Show notification for new synergies
+                        if (!previousSynergies.includes(synergy.name)) {
+                            showPowerupNotification(`✨ SYNERGY: ${synergy.name} ✨`);
+                        }
+                    }
+                }
+            });
+        }
+
+        function addTimedPowerup(name, duration, onEnd, stackable = false) {
+            const existing = gameState.activePowerups.find(p => p.name === name);
+
+            if (existing && stackable) {
+                // Stack the powerup
+                existing.stacks = (existing.stacks || 1) + 1;
+                existing.endTime = Math.max(existing.endTime, Date.now() + duration); // Extend if new duration is longer
+                existing.stackEndTimes = existing.stackEndTimes || [];
+                existing.stackEndTimes.push(Date.now() + duration);
+                existing.onEndCallbacks = existing.onEndCallbacks || [existing.onEnd];
+                existing.onEndCallbacks.push(onEnd);
+            } else if (!stackable) {
+                // Replace existing non-stackable powerup
+                gameState.activePowerups = gameState.activePowerups.filter(p => p.name !== name);
+                gameState.activePowerups.push({ name, endTime: Date.now() + duration, onEnd, stacks: 1 });
+            } else {
+                // New stackable powerup
+                gameState.activePowerups.push({
+                    name,
+                    endTime: Date.now() + duration,
+                    onEnd,
+                    stacks: 1,
+                    stackEndTimes: [Date.now() + duration],
+                    onEndCallbacks: [onEnd]
+                });
+            }
+
+            // Check for synergies
+            checkPowerupSynergies();
         }
 
         function spawnPowerup(position) {
@@ -1715,10 +2218,47 @@
             });
 
             gameState.activePowerups = gameState.activePowerups.filter(p => {
+                // Don't expire synergies
+                if (p.isSynergy) return true;
+
+                // Handle stacked powerups
+                if (p.stacks > 1 && p.stackEndTimes) {
+                    // Remove expired stacks
+                    const now = Date.now();
+                    const expiredCount = p.stackEndTimes.filter(t => t <= now).length;
+
+                    if (expiredCount > 0) {
+                        // Remove expired callbacks
+                        for (let i = 0; i < expiredCount; i++) {
+                            const callback = p.onEndCallbacks.shift();
+                            if (callback) callback();
+                        }
+
+                        // Remove expired times
+                        p.stackEndTimes = p.stackEndTimes.filter(t => t > now);
+                        p.stacks -= expiredCount;
+
+                        // Update end time to next expiring stack
+                        if (p.stackEndTimes.length > 0) {
+                            p.endTime = Math.max(...p.stackEndTimes);
+                        }
+
+                        // Recheck synergies after stack changes
+                        checkPowerupSynergies();
+                    }
+
+                    // Keep if still has stacks
+                    return p.stacks > 0;
+                }
+
+                // Handle non-stacked powerups
                 if (p.endTime <= Date.now()) {
                     if (p.onEnd) p.onEnd();
+                    // Recheck synergies after powerup removal
+                    setTimeout(() => checkPowerupSynergies(), 0);
                     return false;
                 }
+
                 return true;
             });
         }
@@ -2227,7 +2767,10 @@
 
             document.getElementById('powerupsList').innerHTML = gameState.activePowerups.map(p => {
                 const rem = Math.max(0, Math.ceil((p.endTime - Date.now()) / 1000));
-                return `<div class="powerup-item">${p.name} (${rem}s)</div>`;
+                const stackText = p.stacks > 1 ? ` x${p.stacks}` : '';
+                const synergyStyle = p.isSynergy ? ' style="color: #f0f; font-weight: bold; text-shadow: 0 0 10px #f0f;"' : '';
+                const timeText = p.isSynergy ? 'SYNERGY' : `${rem}s`;
+                return `<div class="powerup-item"${synergyStyle}>${p.name}${stackText} (${timeText})</div>`;
             }).join('');
 
             if (gameState.health <= 0) {
