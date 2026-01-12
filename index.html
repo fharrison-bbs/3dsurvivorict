@@ -722,7 +722,13 @@
             lightningChainActive: false,
             autoAimActive: false,
             ghostModeActive: false,
-            deathAuraActive: false
+            deathAuraActive: false,
+            reflectActive: false,
+            tripleShotActive: false,
+            explosiveRoundsActive: false,
+            healthRegenActive: false,
+            swordAuraActive: false,
+            bossesSpawned: []
         };
 
         // ===== KEYBOARD STATE =====
@@ -1055,6 +1061,10 @@
             TANK: { name: 'Tank', color: 0x8844ff, health: 45, speed: 0.018, damage: 6, size: { w: 2, h: 2.8, d: 2 }, score: 250, hitRadius: 2.5 },
             RANGED: { name: 'Ranged', color: 0x00ff88, health: 12, speed: 0.022, damage: 4, size: { w: 1.1, h: 2.4, d: 1.1 }, score: 200, ranged: true, fireRate: 100, hitRadius: 1.7 },
             KAMIKAZE: { name: 'Kamikaze', color: 0xff0000, health: 5, speed: 0.12, damage: 25, size: { w: 0.7, h: 0.7, d: 0.7 }, score: 300, kamikaze: true, hitRadius: 1.0 },
+            SNIPER: { name: 'Sniper', color: 0x00ccff, health: 10, speed: 0.015, damage: 8, size: { w: 0.9, h: 2.5, d: 0.9 }, score: 350, ranged: true, fireRate: 180, hitRadius: 1.5, longRange: true },
+            HEALER: { name: 'Healer', color: 0x00ff00, health: 20, speed: 0.03, damage: 1, size: { w: 1.3, h: 2.3, d: 1.3 }, score: 400, hitRadius: 2.0, healer: true, healRate: 120, healAmount: 3 },
+            SPLITTER: { name: 'Splitter', color: 0xff8800, health: 18, speed: 0.04, damage: 3, size: { w: 1.5, h: 2.0, d: 1.5 }, score: 450, hitRadius: 2.0, splitter: true },
+            TELEPORTER: { name: 'Teleporter', color: 0xcc00ff, health: 12, speed: 0.045, damage: 4, size: { w: 1.0, h: 2.1, d: 1.0 }, score: 500, hitRadius: 1.6, teleporter: true, teleportRate: 150 },
             BOSS: { name: 'BOSS', color: 0xff00ff, health: 200, speed: 0.025, damage: 15, size: { w: 4, h: 5, d: 4 }, score: 2000, hitRadius: 5, isBoss: true, fireRate: 60 }
         };
 
@@ -1062,11 +1072,15 @@
             if (!type) {
                 const rand = Math.random();
                 const lvl = gameState.level;
-                if (rand < 0.30) type = ENEMY_TYPES.BASIC;
-                else if (rand < 0.50) type = ENEMY_TYPES.FAST;
-                else if (rand < 0.65 && lvl >= 2) type = ENEMY_TYPES.TANK;
-                else if (rand < 0.80 && lvl >= 2) type = ENEMY_TYPES.RANGED;
-                else if (lvl >= 3) type = ENEMY_TYPES.KAMIKAZE;
+                if (rand < 0.25) type = ENEMY_TYPES.BASIC;
+                else if (rand < 0.40) type = ENEMY_TYPES.FAST;
+                else if (rand < 0.52 && lvl >= 2) type = ENEMY_TYPES.TANK;
+                else if (rand < 0.64 && lvl >= 2) type = ENEMY_TYPES.RANGED;
+                else if (rand < 0.72 && lvl >= 3) type = ENEMY_TYPES.KAMIKAZE;
+                else if (rand < 0.80 && lvl >= 3) type = ENEMY_TYPES.SNIPER;
+                else if (rand < 0.87 && lvl >= 4) type = ENEMY_TYPES.HEALER;
+                else if (rand < 0.93 && lvl >= 4) type = ENEMY_TYPES.SPLITTER;
+                else if (lvl >= 5) type = ENEMY_TYPES.TELEPORTER;
                 else type = ENEMY_TYPES.BASIC;
             }
 
@@ -1082,14 +1096,21 @@
             const angle = Math.random() * Math.PI * 2;
             enemy.position.set(Math.cos(angle) * (ARENA_SIZE - 8), type.size.h / 2, Math.sin(angle) * (ARENA_SIZE - 8));
 
+            // Scale difficulty based on level
+            const levelScaling = 1 + (gameState.level - 1) * 0.15; // 15% increase per level
+            const healthScaling = 1 + (gameState.level - 1) * 0.2;  // 20% health increase per level
+            const speedScaling = Math.min(1 + (gameState.level - 1) * 0.08, 2); // 8% speed increase, max 2x
+
             enemy.enemyType = type;
-            enemy.health = type.health;
-            enemy.maxHealth = type.health;
-            enemy.speed = type.speed;
-            enemy.damage = type.damage;
+            enemy.health = type.health * healthScaling;
+            enemy.maxHealth = type.health * healthScaling;
+            enemy.speed = type.speed * speedScaling;
+            enemy.damage = type.damage * levelScaling;
             enemy.hitRadius = type.hitRadius;
             enemy.hasDropped = false;
             enemy.fireTimer = 0;
+            enemy.healTimer = 0;
+            enemy.teleportTimer = 0;
 
             const hbMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
             const healthBar = new THREE.Mesh(new THREE.PlaneGeometry(type.isBoss ? 5 : 2.5, type.isBoss ? 0.4 : 0.25), hbMat);
@@ -1110,6 +1131,52 @@
 
             scene.add(enemy);
             enemies.push(enemy);
+        }
+
+        function createMiniEnemy(position, parentType) {
+            const miniType = {
+                ...ENEMY_TYPES.FAST,
+                health: 5,
+                size: { w: 0.6, h: 1.2, d: 0.6 },
+                score: 75,
+                hitRadius: 1.0,
+                color: parentType.color
+            };
+            const geom = new THREE.BoxGeometry(miniType.size.w, miniType.size.h, miniType.size.d);
+            const mat = new THREE.MeshStandardMaterial({
+                color: miniType.color,
+                emissive: miniType.color,
+                emissiveIntensity: 0.4
+            });
+            const enemy = new THREE.Mesh(geom, mat);
+            enemy.castShadow = true;
+
+            const offset = new THREE.Vector3((Math.random()-0.5)*3, 0, (Math.random()-0.5)*3);
+            enemy.position.copy(position).add(offset);
+            enemy.position.y = miniType.size.h / 2;
+
+            enemy.enemyType = miniType;
+            enemy.health = miniType.health;
+            enemy.maxHealth = miniType.health;
+            enemy.speed = miniType.speed;
+            enemy.damage = miniType.damage;
+            enemy.hitRadius = miniType.hitRadius;
+            enemy.hasDropped = false;
+            enemy.fireTimer = 0;
+            enemy.healTimer = 0;
+            enemy.teleportTimer = 0;
+            enemy.isSplit = true;
+
+            const hbMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const healthBar = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.2), hbMat);
+            healthBar.position.y = miniType.size.h / 2 + 0.4;
+            enemy.add(healthBar);
+            enemy.healthBar = healthBar;
+            enemy.boundingBox = new THREE.Box3();
+
+            scene.add(enemy);
+            enemies.push(enemy);
+            return enemy;
         }
 
         const enemyProjectiles = [];
@@ -1138,6 +1205,16 @@
 
                 if (enemy.health <= 0) {
                     createExplosion(enemy.position, enemy.enemyType.color, enemy.enemyType.isBoss ? 20 : 12);
+
+                    // Splitter: spawns 2 smaller enemies when killed
+                    if (enemy.enemyType.splitter && !enemy.isSplit) {
+                        for (let i = 0; i < 2; i++) {
+                            setTimeout(() => {
+                                const miniEnemy = createMiniEnemy(enemy.position.clone(), enemy.enemyType);
+                            }, i * 100);
+                        }
+                    }
+
                     if (!enemy.hasDropped) {
                         const dropChance = enemy.enemyType.isBoss ? 1 : 0.6;
                         if (Math.random() > (1 - dropChance)) spawnPowerup(enemy.position);
@@ -1152,7 +1229,7 @@
                     scene.remove(enemy);
                     enemies.splice(idx, 1);
                     gameState.score += enemy.enemyType.score * gameState.damageMultiplier;
-                    
+
                     if (gameState.vampireActive) {
                         gameState.health = Math.min(gameState.maxHealth, gameState.health + 5);
                     }
@@ -1199,10 +1276,51 @@
                     }
                 }
 
-                if (enemy.enemyType.ranged || enemy.enemyType.isBoss) {
+                // Healer behavior: heals nearby enemies
+                if (enemy.enemyType.healer) {
+                    enemy.healTimer++;
+                    if (enemy.healTimer >= enemy.enemyType.healRate) {
+                        enemy.healTimer = 0;
+                        enemies.forEach(otherEnemy => {
+                            if (otherEnemy !== enemy && enemy.position.distanceTo(otherEnemy.position) < 15) {
+                                otherEnemy.health = Math.min(otherEnemy.maxHealth, otherEnemy.health + enemy.enemyType.healAmount);
+                                createParticleBurst(otherEnemy.position, 0x00ff00, 3);
+                            }
+                        });
+                    }
+                    // Healers try to stay at medium distance
                     const dist = dir.length();
-                    if (dist < 12) dir.negate();
-                    else if (dist > 20 && !inSafeZone) {
+                    if (dist < 10) dir.negate();
+                    else if (dist > 18 && !inSafeZone) {
+                        dir.normalize();
+                        enemy.position.addScaledVector(dir, enemy.speed);
+                    }
+                } else if (enemy.enemyType.teleporter) {
+                    // Teleporter: randomly teleports around the player
+                    enemy.teleportTimer++;
+                    if (enemy.teleportTimer >= enemy.enemyType.teleportRate) {
+                        enemy.teleportTimer = 0;
+                        createParticleBurst(enemy.position, enemy.enemyType.color, 15);
+                        const angle = Math.random() * Math.PI * 2;
+                        const dist = 8 + Math.random() * 10;
+                        enemy.position.set(
+                            camera.position.x + Math.cos(angle) * dist,
+                            enemy.enemyType.size.h / 2,
+                            camera.position.z + Math.sin(angle) * dist
+                        );
+                        createParticleBurst(enemy.position, enemy.enemyType.color, 15);
+                    } else {
+                        if (!inSafeZone) {
+                            dir.normalize();
+                            enemy.position.addScaledVector(dir, enemy.speed);
+                        }
+                    }
+                } else if (enemy.enemyType.ranged || enemy.enemyType.isBoss || enemy.enemyType.longRange) {
+                    const dist = dir.length();
+                    const minDist = enemy.enemyType.longRange ? 20 : 12;
+                    const maxDist = enemy.enemyType.longRange ? 35 : 20;
+                    if (dist < minDist) dir.negate();
+                    else if (dist > maxDist && !inSafeZone) {
                         dir.normalize();
                         enemy.position.addScaledVector(dir, enemy.speed);
                     }
@@ -1300,11 +1418,12 @@
                 createEnemy();
             }
             
-            // Spawn boss every 3 levels
+            // Spawn boss at levels 5 and 10
             const bossExists = enemies.some(e => e.enemyType.isBoss);
-            if (!bossExists && gameState.level % 3 === 0 && gameState.level > 0 && Math.random() > 0.995) {
+            if (!bossExists && (gameState.level === 5 || gameState.level === 10) && !gameState.bossesSpawned.includes(gameState.level)) {
                 createEnemy(ENEMY_TYPES.BOSS);
-                showPowerupNotification("⚠️ BOSS SPAWNED!");
+                gameState.bossesSpawned.push(gameState.level);
+                showPowerupNotification(`⚠️ LEVEL ${gameState.level} BOSS BATTLE!`);
             }
         }
         
@@ -1410,7 +1529,27 @@
                 gameState.magnetActive = true; addTimedPowerup("🧲 Magnet", 15000, () => { gameState.magnetActive = false; }); }},
             { name: "🧛 Vampire", color: 0xaa0055, rarity: 0.4, duration: 12000, effect: () => {
                 gameState.vampireActive = true; addTimedPowerup("🧛 Vampire", 12000, () => { gameState.vampireActive = false; }); }},
-            { name: "💣 Bomb +2", color: 0xff6600, rarity: 0.6, effect: () => { gameState.bombs = Math.min(gameState.maxBombs, gameState.bombs + 2); } }
+            { name: "💣 Bomb +2", color: 0xff6600, rarity: 0.6, effect: () => { gameState.bombs = Math.min(gameState.maxBombs, gameState.bombs + 2); } },
+
+            // New Powerups
+            { name: "☢️ NUKE", color: 0xff0000, rarity: 0.08, effect: () => {
+                activateNuke();
+            }},
+            { name: "🔰 Reflect Shield", color: 0x00ddff, rarity: 0.3, duration: 12000, effect: () => {
+                gameState.reflectActive = true; addTimedPowerup("🔰 Reflect", 12000, () => { gameState.reflectActive = false; });
+            }},
+            { name: "🔱 Triple Shot", color: 0xff00aa, rarity: 0.4, duration: 15000, effect: () => {
+                gameState.tripleShotActive = true; addTimedPowerup("🔱 Triple", 15000, () => { gameState.tripleShotActive = false; });
+            }},
+            { name: "💥 Explosive Rounds", color: 0xff6600, rarity: 0.35, duration: 12000, effect: () => {
+                gameState.explosiveRoundsActive = true; addTimedPowerup("💥 Explosive", 12000, () => { gameState.explosiveRoundsActive = false; });
+            }},
+            { name: "💚 Health Regen", color: 0x00ff66, rarity: 0.45, duration: 20000, effect: () => {
+                gameState.healthRegenActive = true; addTimedPowerup("💚 Regen", 20000, () => { gameState.healthRegenActive = false; });
+            }},
+            { name: "⚔️ Sword Aura", color: 0xffaa00, rarity: 0.25, duration: 10000, effect: () => {
+                gameState.swordAuraActive = true; addTimedPowerup("⚔️ Sword", 10000, () => { gameState.swordAuraActive = false; });
+            }}
         ];
         
         let blackHoleMesh = null;
@@ -1476,13 +1615,36 @@
                 scene.add(strike);
                 particles.push(strike);
             });
-            
+
             setTimeout(() => {
                 enemies.forEach(e => {
                     e.health -= 80;
                     createExplosion(e.position, 0xff0088, 15);
                 });
             }, 1000);
+        }
+
+        function activateNuke() {
+            // Create a massive explosion effect
+            createExplosion(camera.position, 0xff0000, 100);
+
+            // Kill all non-boss enemies
+            enemies.forEach(enemy => {
+                if (!enemy.enemyType.isBoss) {
+                    enemy.health = 0;
+                } else {
+                    enemy.health -= 100; // Damage bosses heavily
+                }
+            });
+
+            // Flash the screen
+            const flash = document.getElementById('damageFlash');
+            flash.style.background = 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 0, 0, 0.3) 100%)';
+            flash.classList.add('active');
+            setTimeout(() => {
+                flash.classList.remove('active');
+                flash.style.background = 'radial-gradient(ellipse at center, transparent 30%, rgba(255, 0, 0, 0.5) 100%)';
+            }, 500);
         }
 
         function addTimedPowerup(name, duration, onEnd) {
@@ -1673,25 +1835,44 @@
             
             if (!gameState.godBeamActive && !gameState.titanMode) gameState.ammo--;
 
-            const color = gameState.godBeamActive ? 0x00ffff : (gameState.titanMode ? 0xffaa00 : 0x00ff00);
+            const color = gameState.godBeamActive ? 0x00ffff : (gameState.titanMode ? 0xffaa00 : (gameState.explosiveRoundsActive ? 0xff6600 : 0x00ff00));
             const scale = gameState.titanMode ? 0.8 : 0.18;
-            
-            const proj = new THREE.Mesh(
-                new THREE.SphereGeometry(scale, 8, 8),
-                new THREE.MeshBasicMaterial({ color: color })
-            );
-            
-            proj.position.copy(camera.position);
-            proj.position.y -= gameState.titanMode ? 1.0 : 0.2;
-            
-            const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-            proj.velocity = forward.clone().multiplyScalar(gameState.godBeamActive ? 2.5 : 1.0);
-            proj.life = 100;
-            proj.hitEnemies = new Set();
-            proj.isGodBeam = gameState.godBeamActive;
 
-            scene.add(proj);
-            projectiles.push(proj);
+            const createSingleProjectile = (angleOffset = 0) => {
+                const proj = new THREE.Mesh(
+                    new THREE.SphereGeometry(scale, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: color })
+                );
+
+                proj.position.copy(camera.position);
+                proj.position.y -= gameState.titanMode ? 1.0 : 0.2;
+
+                const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+
+                // Apply angle offset for triple shot
+                if (angleOffset !== 0) {
+                    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+                    forward.applyAxisAngle(right, angleOffset);
+                }
+
+                proj.velocity = forward.clone().multiplyScalar(gameState.godBeamActive ? 2.5 : 1.0);
+                proj.life = 100;
+                proj.hitEnemies = new Set();
+                proj.isGodBeam = gameState.godBeamActive;
+                proj.isExplosive = gameState.explosiveRoundsActive;
+
+                scene.add(proj);
+                projectiles.push(proj);
+            };
+
+            // Triple shot: fire 3 projectiles
+            if (gameState.tripleShotActive) {
+                createSingleProjectile(-0.15); // Left
+                createSingleProjectile(0);      // Center
+                createSingleProjectile(0.15);   // Right
+            } else {
+                createSingleProjectile();
+            }
         }
 
         function showHitMarker() {
@@ -1737,10 +1918,20 @@
                     const damage = (gameState.titanMode ? 50 : 6) * gameState.damageMultiplier;
                     hitEnemy.health -= damage;
                     proj.hitEnemies.add(hitEnemy);
-                    
+
                     createParticleBurst(proj.position, 0x00ff00, 3);
                     showHitMarker();
-                    
+
+                    // Explosive Rounds - area damage on hit
+                    if (proj.isExplosive) {
+                        createExplosion(proj.position, 0xff6600, 12);
+                        enemies.forEach(e => {
+                            if (e.position.distanceTo(proj.position) < 5) {
+                                e.health -= damage * 0.6;
+                            }
+                        });
+                    }
+
                     // Lightning Chain - damage spreads to nearby enemies
                     if (gameState.lightningChainActive) {
                         enemies.forEach(e => {
@@ -1751,7 +1942,7 @@
                             }
                         });
                     }
-                    
+
                     if (!gameState.piercingActive && !proj.isGodBeam && !gameState.titanMode) {
                         scene.remove(proj);
                         projectiles.splice(idx, 1);
@@ -2004,6 +2195,22 @@
             updateMinimap();
             updateSafeRoomStatus();
             checkLevelProgress();
+
+            // Health Regen powerup
+            if (gameState.healthRegenActive && Math.random() > 0.92) {
+                gameState.health = Math.min(gameState.maxHealth, gameState.health + 0.5);
+            }
+
+            // Sword Aura powerup - damages nearby enemies
+            if (gameState.swordAuraActive) {
+                enemies.forEach(enemy => {
+                    const dist = enemy.position.distanceTo(camera.position);
+                    if (dist < 6) {
+                        enemy.health -= 0.8;
+                        if (Math.random() > 0.9) createParticleBurst(enemy.position, 0xffaa00, 2);
+                    }
+                });
+            }
 
             // UI
             document.getElementById('health').textContent = Math.ceil(gameState.health);
