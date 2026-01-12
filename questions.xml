@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questions>
+    <question>
+        <text>What is bubble sort?</text>
+        <options>
+            <option correct="true">A sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order</option>
+            <option>A search algorithm that finds an item in a sorted list</option>
+            <option>A method to calculate the average of numbers</option>
+            <option>A technique to find the maximum value in an array</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is linear search?</text>
+        <options>
+            <option correct="true">A search algorithm that checks each element in a list sequentially until the target is found</option>
+            <option>A sorting algorithm that arranges elements in order</option>
+            <option>A method to count items in an array</option>
+            <option>An algorithm that only works on sorted lists</option>
+        </options>
+        <category>Search Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is binary search?</text>
+        <options>
+            <option correct="true">A search algorithm that repeatedly divides a sorted list in half to find a target value</option>
+            <option>A sorting algorithm that uses two comparisons</option>
+            <option>A method to search two arrays simultaneously</option>
+            <option>A search that works on unsorted data</option>
+        </options>
+        <category>Search Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is pseudocode?</text>
+        <options>
+            <option correct="true">A plain language description of algorithm steps that is independent of programming language syntax</option>
+            <option>Code that contains errors</option>
+            <option>A fake programming language</option>
+            <option>Machine code that computers execute</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does a totaling algorithm do?</text>
+        <options>
+            <option correct="true">Adds up all values in a dataset to calculate the sum</option>
+            <option>Counts how many items are in a list</option>
+            <option>Finds the largest number in an array</option>
+            <option>Sorts numbers from smallest to largest</option>
+        </options>
+        <category>Standard Algorithms</category>
+    </question>
+
+    <question>
+        <text>What does a counting algorithm do?</text>
+        <options>
+            <option correct="true">Counts the number of items that meet a specific condition</option>
+            <option>Adds all numbers together</option>
+            <option>Arranges items in numerical order</option>
+            <option>Finds the average of values</option>
+        </options>
+        <category>Standard Algorithms</category>
+    </question>
+
+    <question>
+        <text>How do you calculate an average in pseudocode?</text>
+        <options>
+            <option correct="true">Divide the total sum of all values by the count of values</option>
+            <option>Add all values and multiply by the count</option>
+            <option>Find the middle value in a sorted list</option>
+            <option>Subtract the minimum from the maximum</option>
+        </options>
+        <category>Standard Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is an array?</text>
+        <options>
+            <option correct="true">A data structure that stores multiple values of the same type using a single variable name</option>
+            <option>A single variable that holds one value</option>
+            <option>A type of loop structure</option>
+            <option>A conditional statement</option>
+        </options>
+        <category>Data Structures</category>
+    </question>
+
+    <question>
+        <text>What is the purpose of a flowchart?</text>
+        <options>
+            <option correct="true">To visually represent the steps and decisions in an algorithm using standard symbols</option>
+            <option>To write executable code</option>
+            <option>To debug programs</option>
+            <option>To compile programs into machine code</option>
+        </options>
+        <category>Flowcharts</category>
+    </question>
+
+    <question>
+        <text>What symbol is used in a flowchart to represent a decision?</text>
+        <options>
+            <option correct="true">Diamond</option>
+            <option>Rectangle</option>
+            <option>Oval</option>
+            <option>Parallelogram</option>
+        </options>
+        <category>Flowcharts</category>
+    </question>
+
+    <question>
+        <text>What symbol is used in a flowchart to represent input/output?</text>
+        <options>
+            <option correct="true">Parallelogram</option>
+            <option>Rectangle</option>
+            <option>Diamond</option>
+            <option>Circle</option>
+        </options>
+        <category>Flowcharts</category>
+    </question>
+
+    <question>
+        <text>What symbol is used in a flowchart to represent a process or action?</text>
+        <options>
+            <option correct="true">Rectangle</option>
+            <option>Diamond</option>
+            <option>Oval</option>
+            <option>Triangle</option>
+        </options>
+        <category>Flowcharts</category>
+    </question>
+
+    <question>
+        <text>In pseudocode, what does the statement 'TOTAL ← TOTAL + VALUE' represent?</text>
+        <options>
+            <option correct="true">Adding a value to a running total (accumulation)</option>
+            <option>Comparing two values</option>
+            <option>Declaring a new variable</option>
+            <option>Outputting a result</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does 'FOR Counter ← 1 TO 10' mean in pseudocode?</text>
+        <options>
+            <option correct="true">A loop that repeats 10 times with Counter going from 1 to 10</option>
+            <option>A condition that checks if Counter equals 10</option>
+            <option>An array with 10 elements</option>
+            <option>A function that returns 10 values</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is the difference between '=' and '←' in pseudocode?</text>
+        <options>
+            <option correct="true">'←' represents assignment while '=' represents comparison or equality</option>
+            <option>They mean exactly the same thing</option>
+            <option>'=' is assignment and '←' is comparison</option>
+            <option>'←' is only used in flowcharts</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is a variable?</text>
+        <options>
+            <option correct="true">A named storage location in memory that can hold different values during program execution</option>
+            <option>A value that never changes</option>
+            <option>A type of loop</option>
+            <option>A mathematical formula</option>
+        </options>
+        <category>Programming Concepts</category>
+    </question>
+
+    <question>
+        <text>What is selection sort?</text>
+        <options>
+            <option correct="true">A sorting algorithm that repeatedly finds the minimum element and moves it to the sorted portion</option>
+            <option>A search algorithm for finding items</option>
+            <option>A method to select random items from a list</option>
+            <option>A way to remove duplicates</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is insertion sort?</text>
+        <options>
+            <option correct="true">A sorting algorithm that builds the final sorted array one item at a time by inserting elements in their correct position</option>
+            <option>A method to add new items to an array</option>
+            <option>A search algorithm</option>
+            <option>A way to delete items from a list</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>Why does binary search require a sorted list?</text>
+        <options>
+            <option correct="true">Because it relies on comparing the target with the middle element to eliminate half the search space each time</option>
+            <option>Because unsorted lists cannot be searched</option>
+            <option>To make the algorithm slower</option>
+            <option>It doesn't require a sorted list</option>
+        </options>
+        <category>Search Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is a loop?</text>
+        <options>
+            <option correct="true">A programming structure that repeats a set of instructions until a condition is met</option>
+            <option>A single instruction that executes once</option>
+            <option>A variable declaration</option>
+            <option>An error in the code</option>
+        </options>
+        <category>Programming Concepts</category>
+    </question>
+
+    <question>
+        <text>What is the purpose of 'IF...THEN...ELSE' in pseudocode?</text>
+        <options>
+            <option correct="true">To make decisions and execute different code based on whether a condition is true or false</option>
+            <option>To repeat code multiple times</option>
+            <option>To declare variables</option>
+            <option>To end a program</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does 'WHILE condition DO' represent in pseudocode?</text>
+        <options>
+            <option correct="true">A loop that continues executing as long as the condition is true</option>
+            <option>A one-time check of a condition</option>
+            <option>A way to declare variables</option>
+            <option>An output statement</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is algorithm efficiency?</text>
+        <options>
+            <option correct="true">A measure of how fast an algorithm runs and how much memory it uses</option>
+            <option>How easy the algorithm is to write</option>
+            <option>The number of lines of code</option>
+            <option>How many bugs the algorithm has</option>
+        </options>
+        <category>Algorithm Analysis</category>
+    </question>
+
+    <question>
+        <text>Which search algorithm is generally faster for large sorted datasets?</text>
+        <options>
+            <option correct="true">Binary search</option>
+            <option>Linear search</option>
+            <option>Bubble sort</option>
+            <option>They are equally fast</option>
+        </options>
+        <category>Search Algorithms</category>
+    </question>
+
+    <question>
+        <text>What does 'INPUT' mean in pseudocode?</text>
+        <options>
+            <option correct="true">To receive data from the user or external source</option>
+            <option>To display data to the user</option>
+            <option>To perform a calculation</option>
+            <option>To declare a variable</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does 'OUTPUT' mean in pseudocode?</text>
+        <options>
+            <option correct="true">To display or send data to the user or external destination</option>
+            <option>To receive data from the user</option>
+            <option>To store data in a variable</option>
+            <option>To perform a calculation</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>How do you find the maximum value in an array?</text>
+        <options>
+            <option correct="true">Set max to the first element, then compare each element and update max if a larger value is found</option>
+            <option>Sort the array and take the last element</option>
+            <option>Add all values and divide by the count</option>
+            <option>Use binary search</option>
+        </options>
+        <category>Standard Algorithms</category>
+    </question>
+
+    <question>
+        <text>How do you find the minimum value in an array?</text>
+        <options>
+            <option correct="true">Set min to the first element, then compare each element and update min if a smaller value is found</option>
+            <option>Sort the array and take the first element</option>
+            <option>Count all the values</option>
+            <option>Use linear search</option>
+        </options>
+        <category>Standard Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is a nested loop?</text>
+        <options>
+            <option correct="true">A loop inside another loop that executes multiple times for each iteration of the outer loop</option>
+            <option>A loop that never ends</option>
+            <option>Two loops that run at the same time</option>
+            <option>A loop with multiple conditions</option>
+        </options>
+        <category>Programming Concepts</category>
+    </question>
+
+    <question>
+        <text>What does 'DECLARE' mean in pseudocode?</text>
+        <options>
+            <option correct="true">To create a new variable and optionally specify its data type</option>
+            <option>To output a value</option>
+            <option>To perform a calculation</option>
+            <option>To end the program</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is the main advantage of bubble sort?</text>
+        <options>
+            <option correct="true">It is simple to understand and implement</option>
+            <option>It is the fastest sorting algorithm</option>
+            <option>It uses the least memory</option>
+            <option>It only works on small datasets</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is the main disadvantage of bubble sort?</text>
+        <options>
+            <option correct="true">It is inefficient for large datasets because it has poor time complexity</option>
+            <option>It cannot sort numbers</option>
+            <option>It requires a sorted list to work</option>
+            <option>It uses too much memory</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What does 'REPEAT...UNTIL condition' mean in pseudocode?</text>
+        <options>
+            <option correct="true">A loop that executes at least once and continues until the condition becomes true</option>
+            <option>A loop that executes only if the condition is true</option>
+            <option>A conditional statement</option>
+            <option>A variable declaration</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is an index in an array?</text>
+        <options>
+            <option correct="true">A number that represents the position of an element in the array</option>
+            <option>The value stored in the array</option>
+            <option>The size of the array</option>
+            <option>The type of data in the array</option>
+        </options>
+        <category>Data Structures</category>
+    </question>
+
+    <question>
+        <text>In most programming languages, what is the index of the first element in an array?</text>
+        <options>
+            <option correct="true">0</option>
+            <option>1</option>
+            <option>-1</option>
+            <option>It depends on the size of the array</option>
+        </options>
+        <category>Data Structures</category>
+    </question>
+
+    <question>
+        <text>What is a comparison in sorting algorithms?</text>
+        <options>
+            <option correct="true">An operation that checks if one value is greater than, less than, or equal to another</option>
+            <option>A way to combine two values</option>
+            <option>A method to delete elements</option>
+            <option>A type of loop</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is a swap in sorting algorithms?</text>
+        <options>
+            <option correct="true">Exchanging the positions of two elements in a list</option>
+            <option>Deleting an element from a list</option>
+            <option>Adding a new element to a list</option>
+            <option>Comparing two values</option>
+        </options>
+        <category>Sorting Algorithms</category>
+    </question>
+
+    <question>
+        <text>What does 'CASE OF' represent in pseudocode?</text>
+        <options>
+            <option correct="true">A multi-way selection structure that tests a variable against multiple values</option>
+            <option>A loop structure</option>
+            <option>An input statement</option>
+            <option>A way to declare arrays</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is validation in algorithms?</text>
+        <options>
+            <option correct="true">Checking input data to ensure it meets specific criteria before processing</option>
+            <option>Sorting data in ascending order</option>
+            <option>Searching for a specific value</option>
+            <option>Calculating the average</option>
+        </options>
+        <category>Algorithm Concepts</category>
+    </question>
+
+    <question>
+        <text>What is trace table used for?</text>
+        <options>
+            <option correct="true">To track the values of variables step-by-step as an algorithm executes</option>
+            <option>To write pseudocode</option>
+            <option>To create flowcharts</option>
+            <option>To compile programs</option>
+        </options>
+        <category>Algorithm Analysis</category>
+    </question>
+
+    <question>
+        <text>What does 'MOD' operator do in pseudocode?</text>
+        <options>
+            <option correct="true">Returns the remainder after division</option>
+            <option>Performs multiplication</option>
+            <option>Performs division</option>
+            <option>Rounds a number down</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does 'DIV' operator do in pseudocode?</text>
+        <options>
+            <option correct="true">Performs integer division (returns the quotient without remainder)</option>
+            <option>Returns the remainder</option>
+            <option>Performs multiplication</option>
+            <option>Converts to decimal</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What is a Boolean variable?</text>
+        <options>
+            <option correct="true">A variable that can only hold TRUE or FALSE values</option>
+            <option>A variable that holds decimal numbers</option>
+            <option>A variable that stores text</option>
+            <option>A variable that holds multiple values</option>
+        </options>
+        <category>Data Types</category>
+    </question>
+
+    <question>
+        <text>What is string concatenation?</text>
+        <options>
+            <option correct="true">Joining two or more strings together to form a single string</option>
+            <option>Comparing two strings</option>
+            <option>Converting a string to a number</option>
+            <option>Finding the length of a string</option>
+        </options>
+        <category>String Operations</category>
+    </question>
+
+    <question>
+        <text>In linear search, what is the worst-case scenario?</text>
+        <options>
+            <option correct="true">The target value is at the end of the list or not in the list at all</option>
+            <option>The target value is at the beginning</option>
+            <option>The target value is in the middle</option>
+            <option>The list is sorted</option>
+        </options>
+        <category>Search Algorithms</category>
+    </question>
+
+    <question>
+        <text>What is the purpose of a flag variable?</text>
+        <options>
+            <option correct="true">To indicate whether a specific condition has been met or an event has occurred</option>
+            <option>To store the final result</option>
+            <option>To count loop iterations</option>
+            <option>To hold array indices</option>
+        </options>
+        <category>Programming Concepts</category>
+    </question>
+
+    <question>
+        <text>What does 'LENGTH(array)' return in pseudocode?</text>
+        <options>
+            <option correct="true">The number of elements in the array</option>
+            <option>The largest value in the array</option>
+            <option>The sum of all elements</option>
+            <option>The first element of the array</option>
+        </options>
+        <category>Array Operations</category>
+    </question>
+
+    <question>
+        <text>What is an infinite loop?</text>
+        <options>
+            <option correct="true">A loop that never terminates because its exit condition is never met</option>
+            <option>A loop that executes exactly once</option>
+            <option>A loop with multiple conditions</option>
+            <option>A loop inside another loop</option>
+        </options>
+        <category>Programming Concepts</category>
+    </question>
+
+    <question>
+        <text>What is the main difference between 'WHILE' and 'REPEAT...UNTIL' loops?</text>
+        <options>
+            <option correct="true">WHILE checks the condition before executing, REPEAT...UNTIL checks after, guaranteeing at least one execution</option>
+            <option>WHILE loops are faster</option>
+            <option>REPEAT...UNTIL can only count to 10</option>
+            <option>There is no difference</option>
+        </options>
+        <category>Pseudocode</category>
+    </question>
+
+    <question>
+        <text>What does dry running an algorithm mean?</text>
+        <options>
+            <option correct="true">Manually tracing through an algorithm step-by-step with test data to verify it works correctly</option>
+            <option>Running the algorithm on a computer</option>
+            <option>Writing the algorithm in pseudocode</option>
+            <option>Converting the algorithm to a flowchart</option>
+        </options>
+        <category>Algorithm Analysis</category>
+    </question>
+</questions>

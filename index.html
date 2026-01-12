@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G9 Computer Science Arena - Desktop Edition</title>
+    <title>IGCSE Algorithm Battle Garden - Chapter 7</title>
     <style>
         * {
             margin: 0;
@@ -634,46 +634,50 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // ===== G9 COMPUTER SCIENCE QUESTION POOL =====
-        const QUESTION_POOL = [
-            // Multiple Choice from PDF
-            { q: "What is the primary goal of automation in industries like manufacturing?", a: ["To improve efficiency and productivity by reducing manual labor", "To increase the need for human intervention", "To decrease the precision and accuracy of production processes", "To limit the flexibility of production and product design"], c: 0, cat: "Automation" },
-            { q: "Which of the following is NOT a common application of robotics in automation?", a: ["Customer service interactions", "Assembly line tasks", "Welding and painting", "Material handling and packaging"], c: 0, cat: "Robotics" },
-            { q: "What is the role of sensors in automated systems?", a: ["To collect data about the environment and provide feedback to the system", "To control the movement of robots", "To process data and make decisions without human intervention", "To display information to human operators"], c: 0, cat: "Automation" },
-            { q: "What is an advantage of using Computer Numerical Control (CNC) machines in manufacturing?", a: ["Increased precision and accuracy in producing complex parts", "Increased reliance on manual labor", "Reduced production speed and efficiency", "Limited flexibility in adapting to design changes"], c: 0, cat: "Manufacturing" },
-            { q: "What is a potential impact of automation on the workforce?", a: ["Job displacement in certain sectors due to reduced need for human labor", "Increased demand for low-skilled labor", "Decreased productivity in industries", "No significant impact on employment patterns"], c: 0, cat: "Automation Impact" },
-            { q: "What is a key benefit of using Programmable Logic Controllers (PLCs) in automation?", a: ["They can automate complex processes by controlling and monitoring machinery", "They require constant human intervention to function", "They are inflexible and cannot be reprogrammed for different tasks", "They are only suitable for simple, repetitive tasks"], c: 0, cat: "PLCs" },
-            { q: "What is a concern related to the increasing use of automation in various industries?", a: ["Ethical considerations and potential impact on employment", "Reduced efficiency and productivity", "Increased costs associated with implementing automation", "Limited potential for innovation and technological advancements"], c: 0, cat: "Ethics" },
-            { q: "How can automation benefit small and medium-sized enterprises (SMEs)?", a: ["By improving efficiency, productivity, and product quality, even with limited resources", "By increasing operating costs and reducing competitiveness", "By limiting production capacity and flexibility", "By solely relying on manual labor and avoiding any technological advancements"], c: 0, cat: "SMEs" },
-            { q: "What is an example of automation in everyday life?", a: ["Using a self-checkout kiosk at a grocery store", "Using a manual typewriter", "Sending a telegram", "Listening to vinyl records"], c: 0, cat: "Everyday Automation" },
-            { q: "Which of the following pseudocode statements correctly represents a conditional statement that checks if a variable age is greater than or equal to 18?", a: ["IF age >= 18 THEN", "IF age > 18 THEN", "INPUT age >= 18", "OUTPUT age > 18"], c: 0, cat: "Pseudocode" },
-            
-            // Additional questions based on fill-in-the-blank
-            { q: "What do flowcharts NOT directly translate into?", a: ["Executable code", "Visual diagrams", "Pseudocode", "Written instructions"], c: 0, cat: "SDLC" },
-            { q: "What is the main goal of the Maintenance stage in the SDLC?", a: ["To ensure the program continues to function correctly and meet user needs", "To write the initial code", "To design the user interface", "To analyze requirements"], c: 0, cat: "SDLC" },
-            { q: "Which conditional statement is used in pseudocode?", a: ["If...Then...Else", "Switch...Case", "While...Do", "For...Next"], c: 0, cat: "Pseudocode" },
-            { q: "A loop structure in a flowchart represents:", a: ["A set of instructions that are repeated multiple times", "A single decision point", "The end of the program", "Input from the user"], c: 0, cat: "Flowcharts" },
-            { q: "What is the first stage in the Software Development Lifecycle (SDLC)?", a: ["Analysis", "Design", "Implementation", "Testing"], c: 0, cat: "SDLC" },
-            
-            // Additional G9 CS topics
-            { q: "What does AI stand for?", a: ["Artificial Intelligence", "Automated Integration", "Advanced Input", "Application Interface"], c: 0, cat: "AI" },
-            { q: "Which technology is used to create extremely small machines and materials at the molecular level?", a: ["Nanotechnology", "Biotechnology", "Robotics", "Automation"], c: 0, cat: "Emerging Tech" },
-            { q: "What is the purpose of the testing stage in SDLC?", a: ["To identify and fix bugs before deployment", "To write the code", "To gather requirements", "To train users"], c: 0, cat: "SDLC" },
-            { q: "Documentation in SDLC is important because:", a: ["It helps users and developers understand how to use and maintain the software", "It makes the software run faster", "It reduces the file size", "It automatically fixes bugs"], c: 0, cat: "SDLC" },
-            { q: "What type of robot is commonly used in manufacturing assembly lines?", a: ["Industrial robots", "Humanoid robots", "Nano robots", "Flying drones"], c: 0, cat: "Robotics" },
-            
-            // More challenging questions
-            { q: "Which of these is a potential benefit of AI in healthcare?", a: ["Improved diagnosis accuracy", "Reduced need for doctors", "Elimination of all diseases", "Automatic patient recovery"], c: 0, cat: "AI Applications" },
-            { q: "What is biotechnology primarily concerned with?", a: ["Using biological processes for industrial and medical purposes", "Building computer networks", "Creating artificial intelligence", "Designing robots"], c: 0, cat: "Biotechnology" },
-            { q: "In the SDLC, what comes after the design phase?", a: ["Implementation", "Analysis", "Testing", "Maintenance"], c: 0, cat: "SDLC" },
-            { q: "What is a potential ethical concern with facial recognition technology?", a: ["Privacy violations and surveillance concerns", "Too expensive to implement", "Requires too much electricity", "Only works in daylight"], c: 0, cat: "Ethics" },
-            { q: "Which programming concept allows code to make decisions?", a: ["Conditional statements", "Variables", "Comments", "Functions"], c: 0, cat: "Programming" },
-            { q: "What is the main purpose of a loop in programming?", a: ["To repeat a set of instructions multiple times", "To make the program run faster", "To delete variables", "To print output"], c: 0, cat: "Programming" },
-            { q: "Which stage of SDLC involves gathering information about what the software needs to do?", a: ["Analysis", "Implementation", "Testing", "Deployment"], c: 0, cat: "SDLC" },
-            { q: "What is machine learning?", a: ["A type of AI where systems learn from data without explicit programming", "A way to lift heavy machinery", "A method to clean computer parts", "A type of robot"], c: 0, cat: "AI" },
-            { q: "Which automation technology is used in modern cars for safety?", a: ["Anti-lock braking systems (ABS)", "Manual transmission", "Cassette players", "Hand-crank windows"], c: 0, cat: "Automation" },
-            { q: "What does CNC stand for in manufacturing?", a: ["Computer Numerical Control", "Central Network Computer", "Controlled Numeric Calculation", "Coded Number Conversion"], c: 0, cat: "Manufacturing" }
-        ];
+        // ===== IGCSE CHAPTER 7 - ALGORITHM & PROBLEM SOLVING QUESTIONS =====
+        let QUESTION_POOL = [];
+
+        // Load questions from XML file
+        async function loadQuestions() {
+            try {
+                const response = await fetch('questions.xml');
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+                const questions = xmlDoc.getElementsByTagName('question');
+                QUESTION_POOL = [];
+
+                for (let i = 0; i < questions.length; i++) {
+                    const question = questions[i];
+                    const text = question.getElementsByTagName('text')[0].textContent;
+                    const category = question.getElementsByTagName('category')[0].textContent;
+                    const options = question.getElementsByTagName('option');
+
+                    const answers = [];
+                    let correctIndex = 0;
+
+                    for (let j = 0; j < options.length; j++) {
+                        answers.push(options[j].textContent);
+                        if (options[j].getAttribute('correct') === 'true') {
+                            correctIndex = j;
+                        }
+                    }
+
+                    QUESTION_POOL.push({
+                        q: text,
+                        a: answers,
+                        c: correctIndex,
+                        cat: category
+                    });
+                }
+
+                shuffledQuestions = shuffleArray([...QUESTION_POOL]);
+                console.log(`Loaded ${QUESTION_POOL.length} questions from XML`);
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
 
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -682,8 +686,8 @@
             }
             return arr;
         }
-        
-        let shuffledQuestions = shuffleArray([...QUESTION_POOL]);
+
+        let shuffledQuestions = [];
         let questionIndex = 0;
 
         // ===== GAME STATE =====
@@ -779,8 +783,8 @@
 
         // ===== THREE.JS SETUP =====
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x050510);
-        scene.fog = new THREE.FogExp2(0x050510, 0.015);
+        scene.background = new THREE.Color(0x87CEEB); // Sky blue
+        scene.fog = new THREE.FogExp2(0xA8D8EA, 0.012); // Light blue fog
 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 3, 0);
@@ -797,21 +801,21 @@
         renderer.domElement.style.zIndex = '1';
 
         // ===== LIGHTING =====
-        const ambientLight = new THREE.AmbientLight(0x6644aa, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xFFFFDD, 0.7); // Warm ambient light
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xff00ff, 0.8);
+        const directionalLight = new THREE.DirectionalLight(0xFFF8DC, 1.0); // Warm sunlight
         directionalLight.position.set(30, 50, 30);
         directionalLight.castShadow = true;
         directionalLight.shadow.mapSize.width = 2048;
         directionalLight.shadow.mapSize.height = 2048;
         scene.add(directionalLight);
 
-        const pointLight1 = new THREE.PointLight(0x00ffff, 0.6, 60);
+        const pointLight1 = new THREE.PointLight(0xFFE4B5, 0.4, 60); // Soft warm light
         pointLight1.position.set(-25, 10, -25);
         scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0xff0088, 0.6, 60);
+        const pointLight2 = new THREE.PointLight(0xFFF8DC, 0.4, 60); // Soft warm light
         pointLight2.position.set(25, 10, 25);
         scene.add(pointLight2);
 
@@ -837,10 +841,10 @@
             traps.length = 0;
 
             const groundGeom = new THREE.PlaneGeometry(ARENA_SIZE * 2, ARENA_SIZE * 2, 40, 40);
-            const groundMat = new THREE.MeshStandardMaterial({ 
-                color: 0x0a0a1a, 
-                roughness: 0.4,
-                metalness: 0.6
+            const groundMat = new THREE.MeshStandardMaterial({
+                color: 0x3A7D44, // Grass green
+                roughness: 0.9,
+                metalness: 0.1
             });
             const ground = new THREE.Mesh(groundGeom, groundMat);
             ground.rotation.x = -Math.PI / 2;
@@ -849,12 +853,12 @@
             levelObjects.push(ground);
 
             if (gridHelper) scene.remove(gridHelper);
-            gridHelper = new THREE.GridHelper(ARENA_SIZE * 2, 60, 0xff00ff, 0x220044);
+            gridHelper = new THREE.GridHelper(ARENA_SIZE * 2, 60, 0x8B7355, 0x556B2F); // Brown and olive green paths
             gridHelper.position.y = 0.05;
             scene.add(gridHelper);
             levelObjects.push(gridHelper);
 
-            const wallMat = new THREE.MeshStandardMaterial({ color: 0x220044, emissive: 0x220066, emissiveIntensity: 0.4, metalness: 0.8, roughness: 0.2 });
+            const wallMat = new THREE.MeshStandardMaterial({ color: 0x2D5016, emissive: 0x1A3010, emissiveIntensity: 0.2, metalness: 0.1, roughness: 0.9 }); // Dark green hedge
             [
                 { x: 0, z: -ARENA_SIZE, ry: 0 },
                 { x: 0, z: ARENA_SIZE, ry: 0 },
@@ -869,8 +873,8 @@
                 levelObjects.push(wall);
             });
 
-            const obsMat = new THREE.MeshStandardMaterial({ color: 0x445566, roughness: 0.3, metalness: 0.7 });
-            const obsEmissive = new THREE.MeshStandardMaterial({ color: 0x000, emissive: 0x00ffff, emissiveIntensity: 0.8 });
+            const obsMat = new THREE.MeshStandardMaterial({ color: 0x4A7C59, roughness: 0.9, metalness: 0.1 }); // Tree/bush green
+            const obsEmissive = new THREE.MeshStandardMaterial({ color: 0x2F4F2F, emissive: 0x228B22, emissiveIntensity: 0.3 }); // Dark green trim
             
             for (let i = 0; i < 6 + level * 2; i++) {
                 const s = 3 + Math.random() * 4;
@@ -897,7 +901,7 @@
 
             for (let i = 0; i < Math.min(level + 1, 6); i++) createTrap();
 
-            const pillarMat = new THREE.MeshStandardMaterial({ color: 0x00ffaa, emissive: 0x00ff88, emissiveIntensity: 0.8, transparent: true, opacity: 0.8 });
+            const pillarMat = new THREE.MeshStandardMaterial({ color: 0xD2691E, emissive: 0x8B4513, emissiveIntensity: 0.3, transparent: false, opacity: 1.0 }); // Brown garden posts
             for (let i = 0; i < 6; i++) {
                 const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 20, 8), pillarMat);
                 const angle = (i / 6) * Math.PI * 2;
@@ -923,32 +927,32 @@
                 positions[i+2] = (Math.random() - 0.5) * ARENA_SIZE * 2;
             }
             geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const mat = new THREE.PointsMaterial({ color: 0x88aaff, size: 0.2, transparent: true, opacity: 0.5 });
+            const mat = new THREE.PointsMaterial({ color: 0xFFFACD, size: 0.15, transparent: true, opacity: 0.4 }); // Soft yellow pollen/fireflies
             dustSystem = new THREE.Points(geom, mat);
             scene.add(dustSystem);
         }
 
         function createSafeRoom() {
             const sr = SAFE_ROOM;
-            
-            const floorMat = new THREE.MeshStandardMaterial({ 
-                color: 0x004422, 
-                emissive: 0x00ff66, 
-                emissiveIntensity: 0.2,
-                roughness: 0.3
+
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: 0x8B7355, // Wooden deck
+                emissive: 0x5D4E37,
+                emissiveIntensity: 0.1,
+                roughness: 0.8
             });
             const floor = new THREE.Mesh(new THREE.PlaneGeometry(sr.width, sr.depth), floorMat);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(sr.x, 0.1, sr.z);
             scene.add(floor);
             levelObjects.push(floor);
-            
-            const wallMat = new THREE.MeshStandardMaterial({ 
-                color: 0x00aa66, 
-                emissive: 0x00ff88, 
-                emissiveIntensity: 0.3,
+
+            const wallMat = new THREE.MeshStandardMaterial({
+                color: 0xF5DEB3, // Light wood/beige
+                emissive: 0xD2B48C,
+                emissiveIntensity: 0.2,
                 transparent: true,
-                opacity: 0.4
+                opacity: 0.5
             });
             
             const backWall = new THREE.Mesh(new THREE.BoxGeometry(sr.width, sr.height, 0.5), wallMat);
@@ -976,17 +980,17 @@
             scene.add(frontWallRight);
             levelObjects.push(frontWallRight);
             
-            const signMat = new THREE.MeshStandardMaterial({ 
-                color: 0x00ff88, 
-                emissive: 0x00ff88, 
-                emissiveIntensity: 1
+            const signMat = new THREE.MeshStandardMaterial({
+                color: 0xFFFFE0, // Light yellow sign
+                emissive: 0xFFFACD,
+                emissiveIntensity: 0.6
             });
             const sign = new THREE.Mesh(new THREE.BoxGeometry(4, 1, 0.2), signMat);
             sign.position.set(sr.x, sr.height + 1, sr.z + sr.depth / 2);
             scene.add(sign);
             levelObjects.push(sign);
-            
-            const safeLight = new THREE.PointLight(0x00ff88, 1, 25);
+
+            const safeLight = new THREE.PointLight(0xFFF8DC, 0.8, 25); // Warm garden light
             safeLight.position.set(sr.x, 5, sr.z);
             scene.add(safeLight);
             levelObjects.push(safeLight);
@@ -2033,9 +2037,12 @@
             renderer.render(scene, camera);
         }
 
-        generateLevel(1);
-        for (let i = 0; i < 4; i++) createEnemy();
-        animate();
+        // Initialize game after questions are loaded
+        loadQuestions().then(() => {
+            generateLevel(1);
+            for (let i = 0; i < 4; i++) createEnemy();
+            animate();
+        });
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
