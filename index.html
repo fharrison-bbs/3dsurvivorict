@@ -698,7 +698,7 @@
         // ===== GAME STATE =====
         const gameState = {
             health: 100, maxHealth: 100,
-            ammo: 30, maxAmmo: 60,
+            ammo: 30, maxAmmo: 600,
             bombs: 3, maxBombs: 5,
             score: 0, streak: 0,
             correct: 0, wrong: 0,
@@ -735,7 +735,7 @@
             swordAuraActive: false,
 
             // New movement & mobility powerups
-            dashCount: 0,
+            dashCount: 10,
             jumpMultiplier: 1,
             airControlActive: false,
             phaseWalkActive: false,
@@ -1120,14 +1120,14 @@
         const ENEMY_TYPES = {
             BASIC: { name: 'Basic', color: 0xff3333, health: 15, speed: 0.035, damage: 2, size: { w: 1.2, h: 2.2, d: 1.2 }, score: 100, hitRadius: 1.8 },
             FAST: { name: 'Fast', color: 0xffff00, health: 8, speed: 0.08, damage: 1, size: { w: 0.8, h: 1.6, d: 0.8 }, score: 150, hitRadius: 1.3 },
-            TANK: { name: 'Tank', color: 0x8844ff, health: 45, speed: 0.018, damage: 6, size: { w: 2, h: 2.8, d: 2 }, score: 250, hitRadius: 2.5 },
+            TANK: { name: 'Tank', color: 0x8844ff, health: 450, speed: 0.018, damage: 6, size: { w: 2, h: 2.8, d: 2 }, score: 250, hitRadius: 2.5 },
             RANGED: { name: 'Ranged', color: 0x00ff88, health: 12, speed: 0.022, damage: 4, size: { w: 1.1, h: 2.4, d: 1.1 }, score: 200, ranged: true, fireRate: 100, hitRadius: 1.7 },
             KAMIKAZE: { name: 'Kamikaze', color: 0xff0000, health: 5, speed: 0.12, damage: 25, size: { w: 0.7, h: 0.7, d: 0.7 }, score: 300, kamikaze: true, hitRadius: 1.0 },
             SNIPER: { name: 'Sniper', color: 0x00ccff, health: 10, speed: 0.015, damage: 8, size: { w: 0.9, h: 2.5, d: 0.9 }, score: 350, ranged: true, fireRate: 180, hitRadius: 1.5, longRange: true },
-            HEALER: { name: 'Healer', color: 0x00ff00, health: 20, speed: 0.03, damage: 1, size: { w: 1.3, h: 2.3, d: 1.3 }, score: 400, hitRadius: 2.0, healer: true, healRate: 120, healAmount: 3 },
+            HEALER: { name: 'Healer', color: 0x00ff00, health: 20, speed: 0.03, damage: 1, size: { w: 1.3, h: 2.3, d: 1.3 }, score: 400, hitRadius: 2.0, healer: true, healRate: 180, healAmount: 3 },
             SPLITTER: { name: 'Splitter', color: 0xff8800, health: 18, speed: 0.04, damage: 3, size: { w: 1.5, h: 2.0, d: 1.5 }, score: 450, hitRadius: 2.0, splitter: true },
-            TELEPORTER: { name: 'Teleporter', color: 0xcc00ff, health: 12, speed: 0.045, damage: 4, size: { w: 1.0, h: 2.1, d: 1.0 }, score: 500, hitRadius: 1.6, teleporter: true, teleportRate: 150 },
-            BOSS: { name: 'BOSS', color: 0xff00ff, health: 200, speed: 0.025, damage: 15, size: { w: 4, h: 5, d: 4 }, score: 2000, hitRadius: 5, isBoss: true, fireRate: 60 }
+            TELEPORTER: { name: 'Teleporter', color: 0xcc00ff, health: 12, speed: 0.045, damage: 4, size: { w: 1.0, h: 2.1, d: 1.0 }, score: 500, hitRadius: 1.6, teleporter: true, teleportRate: 350 },
+            BOSS: { name: 'BOSS', color: 0xff00ff, health: 200, speed: 0.025, damage: 15, size: { w: 4, h: 5, d: 4 }, score: 2000, hitRadius: 5, isBoss: true, fireRate: 600 }
         };
 
         function createEnemy(type = null) {
@@ -1161,7 +1161,7 @@
             // Scale difficulty based on level
             const levelScaling = 1 + (gameState.level - 1) * 0.15; // 15% increase per level
             const healthScaling = 1 + (gameState.level - 1) * 0.2;  // 20% health increase per level
-            const speedScaling = Math.min(1 + (gameState.level - 1) * 0.08, 2); // 8% speed increase, max 2x
+            const speedScaling = Math.min(1 + (gameState.level - 1) * 0.18, 2); // 8% speed increase, max 2x
 
             enemy.enemyType = type;
             enemy.health = type.health * healthScaling;
